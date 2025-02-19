@@ -34,14 +34,14 @@ const NameInput = ({ isOpen, onClose, title }: NameInputDialogProps) => {
         <Input
           value={name}
           placeholder="Enter name"
-          onChange={handleSubmit}
+          onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
         <DialogFooter>
           <Button variant={"outline"} onClick={onClose}>
             Cancel
           </Button>
-          <Button>Create</Button>
+          <Button onClick={handleSubmit}>Create</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
