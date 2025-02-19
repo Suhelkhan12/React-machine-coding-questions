@@ -29,7 +29,7 @@ export const links: Link[] = [
     label: "Trek bag",
   },
   {
-    href: "/folder-structure",
-    label: "Folder structure",
+    href: "/file-tree",
+    label: "File tree",
   },
 ];
