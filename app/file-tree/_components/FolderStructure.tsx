@@ -27,6 +27,7 @@ const FolderStructure = () => {
   const [structure, setStructure] = useState<FileTreeItem[]>([]);
   const [isAddingFile, setIsAddingFile] = useState(false);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const [currentParentId, setCurrentParentId] = useState<string | null>(null);
 
   // function for creating a new file
   const addFile = (name: string) => {
@@ -35,6 +36,15 @@ const FolderStructure = () => {
       name,
       type: "file",
     };
+
+    if (currentParentId) {
+      setStructure(
+        updateStructure(currentParentId, structure, (item) => ({
+          ...item,
+          children: [...(item.children || []), newFile],
+        }))
+      );
+    }
     setStructure([...structure, newFile]);
   };
 
@@ -46,7 +56,34 @@ const FolderStructure = () => {
       // for every new folder created the children will be an empty array
       children: [],
     };
-    setStructure([...structure, newFolder]);
+    if (currentParentId) {
+      setStructure(
+        updateStructure(currentParentId, structure, (it) => ({
+          ...it,
+          children: [...(it.children || []), newFolder],
+        }))
+      );
+    } else setStructure([...structure, newFolder]);
+  };
+
+  // for updating the nested folders
+  const updateStructure = (
+    id: string,
+    items: FileTreeItem[],
+    updateFn: (item: FileTreeItem) => FileTreeItem
+  ): FileTreeItem[] => {
+    return items.map((it) => {
+      if (it.id === id) {
+        return updateFn(it);
+      }
+      if (it.children) {
+        return {
+          ...it,
+          children: updateStructure(it.id, it.children, updateFn),
+        };
+      }
+      return it;
+    });
   };
 
   return (
