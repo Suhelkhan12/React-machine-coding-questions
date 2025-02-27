@@ -1,5 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import {
   File,
   Folder,
@@ -8,7 +16,7 @@ import {
   ChevronsDown,
   Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import NameInput from "./name-input";
 
 type FileTreeItem = {
   id: string;
@@ -28,16 +36,54 @@ const FolderStructure = () => {
   return (
     <div className="p-2">
       <div className="flex space-x-2 mb-4">
-        <Button variant={"outline"} size={"icon"}>
-          <FilePlus className="size-4 mr-1" />
-        </Button>
-        <Button variant={"outline"} size={"icon"}>
-          <FolderPlus className="w-4 h-4 mr-1" />
-        </Button>
-        <Button variant={"outline"} size={"icon"}>
-          <ChevronsDown className="w-4 h-4 mr-1" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={"outline"}
+                size={"icon"}
+                onClick={() => setIsAddingFile((p) => !p)}
+              >
+                <FilePlus className="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add new file</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={"outline"}
+                size={"icon"}
+                onClick={() => setIsAddingFolder((p) => !p)}
+              >
+                <FolderPlus className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add new folder</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"outline"} size={"icon"}>
+                <ChevronsDown className="w-4 h-4 " />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Collapse all</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
+
+      <NameInput
+        title="file"
+        isOpen={isAddingFile}
+        onClose={() => setIsAddingFile((p) => !p)}
+      />
+      <NameInput
+        title="folder"
+        isOpen={isAddingFolder}
+        onClose={() => setIsAddingFolder((p) => !p)}
+      />
     </div>
   );
 };
