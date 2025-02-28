@@ -30,8 +30,49 @@ type FileTreeItem = {
 };
 
 const FolderStructure = () => {
+  const [fileTree, setFileTree] = useState<FileTreeItem[]>([]);
   const [isAddingFile, setIsAddingFile] = useState(false);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
+
+  // this currentparentId will decide whethere user is tryin to create a file or folder nested insde a parent folder of simply creating something inside the root folder
+  const [currentParentId, setCurrentParentId] = useState<string | null>(null);
+
+  const addFile = (name: string) => {
+    // this is simply a new instance of the file which the user will create and user will only provide the name and rest all fields will be decided by us
+    const newFile: FileTreeItem = {
+      id: Date.now().toString(),
+      name,
+      type: "file",
+      isOpen: false,
+    };
+
+    //if there is parentId which means user is trying to create a folder or file insde a folder
+    if (currentParentId) {
+      // then we will need to add that file or folder inside the folder
+    } else {
+      //when user is simply creating a file or folder inide the root only
+      setFileTree([...fileTree, newFile]);
+    }
+  };
+
+  const addFolder = (name: string) => {
+    const newFolder: FileTreeItem = {
+      id: Date.now().toString(),
+      name,
+      type: "folder",
+      //because this folder can have other file or folder inside it for the user to create
+      children: [],
+      isOpen: false,
+    };
+
+    //if there is parentId which means user is trying to create a folder or file insde a folder
+    if (currentParentId) {
+      // then we will need to add that file or folder inside the folder
+    } else {
+      //when user is simply creating a file or folder inide the root only
+      setFileTree([...fileTree, newFolder]);
+    }
+  };
 
   return (
     <div className="p-2">
@@ -78,11 +119,13 @@ const FolderStructure = () => {
         title="file"
         isOpen={isAddingFile}
         onClose={() => setIsAddingFile((p) => !p)}
+        onCreate={addFile}
       />
       <NameInput
         title="folder"
         isOpen={isAddingFolder}
         onClose={() => setIsAddingFolder((p) => !p)}
+        onCreate={addFolder}
       />
     </div>
   );

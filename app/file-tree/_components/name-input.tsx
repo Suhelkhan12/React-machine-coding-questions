@@ -17,14 +17,16 @@ type NameInputProps = {
   title: string;
   isOpen: boolean;
   onClose: () => void;
+  onCreate: (name: string) => void;
 };
 
-const NameInput = ({ title, isOpen, onClose }: NameInputProps) => {
+const NameInput = ({ title, isOpen, onClose, onCreate }: NameInputProps) => {
   const [ipVal, setIpVal] = useState("");
 
   const handleSubmit = () => {
+    onCreate(ipVal);
     toast.success("Congratulations🎊", {
-      description: `${title} with ${ipVal} has been created.`,
+      description: `${title} with name ${ipVal} has been created.`,
     });
     setIpVal("");
     onClose();
